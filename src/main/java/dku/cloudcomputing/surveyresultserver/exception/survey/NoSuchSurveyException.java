@@ -1,8 +1,10 @@
 package dku.cloudcomputing.surveyresultserver.exception.survey;
 
-public class NoSuchSurveyException extends RuntimeException {
+import dku.cloudcomputing.surveyresultserver.exception.ClientOccurException;
+
+public class NoSuchSurveyException extends ClientOccurException {
     public NoSuchSurveyException() {
-        new NoSuchSurveyException("해당되는 설문이 없습니다");
+        this("해당되는 설문이 없습니다");
     }
 
     public NoSuchSurveyException(String message) {

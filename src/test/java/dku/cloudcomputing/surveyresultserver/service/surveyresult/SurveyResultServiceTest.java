@@ -80,7 +80,7 @@ class SurveyResultServiceTest {
         Survey savedSurvey = surveyRepository.save(new Survey(1L, savedMember, "test", LocalDate.now(), 30, true));
         Survey savedSurvey2 = surveyRepository.save(new Survey(2L, savedMember, "test", LocalDate.now(), 30, true));
 
-        SubjectiveSurveyDetail savedSubjectiveDetail = detailRepository.save(new SubjectiveSurveyDetail(1L, savedSurvey, "test"));
+        detailRepository.save(new SubjectiveSurveyDetail(1L, savedSurvey, "test"));
         MultipleChoiceSurveyDetail savedMultipleChoiceDetail = detailRepository.save(new MultipleChoiceSurveyDetail(2L, savedSurvey, "test"));
 
         detailRepository.save(new SubjectiveSurveyDetail(3L, savedSurvey2, "test"));
@@ -103,7 +103,6 @@ class SurveyResultServiceTest {
         Survey savedSurvey1 = surveyRepository.save(new Survey(1L, savedMember, "test", LocalDate.now(), 30, true));
         Survey savedSurvey2 = surveyRepository.save(new Survey(2L, savedMember, "test", LocalDate.now(), 30, true));
 
-        detailRepository.save(new SubjectiveSurveyDetail(1L, savedSurvey1, "test"));
         MultipleChoiceSurveyDetail savedMultipleChoiceDetail1 = detailRepository.save(new MultipleChoiceSurveyDetail(2L, savedSurvey1, "test"));
         MultipleChoiceSurveyDetail savedMultipleChoiceDetail2 = detailRepository.save(new MultipleChoiceSurveyDetail(3L, savedSurvey2, "test"));
 
@@ -115,6 +114,29 @@ class SurveyResultServiceTest {
 
         List<CreateSurveyResultDto> surveyResultDtos = new ArrayList<>();
         surveyResultDtos.add(new CreateSurveyResultDto(2L, SurveyDetailType.MULTIPLE_CHOICE, null, 3L));
+        surveyResultDtos.add(new CreateSurveyResultDto(2L, SurveyDetailType.MULTIPLE_CHOICE, null, 8L));
+
+        assertThatThrownBy(() -> surveyResultService.saveSurveyResult(1L, surveyResultDtos))
+                .isInstanceOf(ClientOccurException.class);
+    }
+
+    @Test
+    @DisplayName("다른 세부항목의 옵션 선택시 저장 실패")
+    void saveSurveyResultFailWhenOptionWrongMatchDetail() {
+        Member savedMember = memberRepository.save(new Member(1L, "test@test", "test", "tset"));
+        Survey savedSurvey1 = surveyRepository.save(new Survey(1L, savedMember, "test", LocalDate.now(), 30, true));
+
+        MultipleChoiceSurveyDetail savedMultipleChoiceDetail1 = detailRepository.save(new MultipleChoiceSurveyDetail(1L, savedSurvey1, "test"));
+        MultipleChoiceSurveyDetail savedMultipleChoiceDetail2 = detailRepository.save(new MultipleChoiceSurveyDetail(2L, savedSurvey1, "test"));
+
+
+        for (int i = 0; i < 5; i++) {
+            optionRepository.save(new MultipleChoiceOption((long) (i + 1), savedMultipleChoiceDetail1, "option"));
+            optionRepository.save(new MultipleChoiceOption((long) (i + 1 + 5), savedMultipleChoiceDetail2, "option"));
+        }
+
+        List<CreateSurveyResultDto> surveyResultDtos = new ArrayList<>();
+        surveyResultDtos.add(new CreateSurveyResultDto(1L, SurveyDetailType.MULTIPLE_CHOICE, null, 8L));
         surveyResultDtos.add(new CreateSurveyResultDto(2L, SurveyDetailType.MULTIPLE_CHOICE, null, 8L));
 
         assertThatThrownBy(() -> surveyResultService.saveSurveyResult(1L, surveyResultDtos))

@@ -33,14 +33,12 @@ public class ControllerExceptionAdviser {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ClientOccurException.class)
     public StatusResponseDto clientOccurHandler(ClientOccurException clientOccurException) {
-        clientOccurException.printStackTrace();
         return new StatusResponseDto("fail");
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
     public StatusResponseDto runtimeExceptionHandler(RuntimeException runtimeException) {
-        runtimeException.printStackTrace();
         return new StatusResponseDto("fail");
     }
 

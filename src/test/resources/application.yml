@@ -20,8 +20,6 @@ spring:
     properties:
       hibernate:
         show_sql: true
-        jdbc:
-          batch_size: 100
 
   kafka:
     bootstrap-servers: 127.0.0.1:12345

@@ -52,9 +52,11 @@ public class SurveyResultQueryService {
 
         Map<Long, List<SurveyResultQueryDto>> mappedSurveyResultDtos = getSurveyResultDtosMappedByDetailId(surveyQueryDto);
 
-        surveyQueryDto.getSurveyDetails().stream()
+
+        surveyQueryDto.getSurveyDetails()
                 .forEach(e -> {
                     List<SurveyResultQueryDto> resultQueryDtos = mappedSurveyResultDtos.get(e.getId());
+                    if(resultQueryDtos == null || resultQueryDtos.isEmpty()) return;
                     e.setResults(resultQueryDtos);
                     e.setResultCount(resultQueryDtos.size());
                 });
@@ -63,7 +65,7 @@ public class SurveyResultQueryService {
     }
 
     private Map<Long, List<SurveyResultQueryDto>> getSurveyResultDtosMappedByDetailId(SurveyQueryDto surveyQueryDto) {
-        Map<Long, List<SurveyResultQueryDto>> mappedSurveyResultDtos = resultQueryRepository.findByDetailIdList(
+        return resultQueryRepository.findByDetailIdList(
                 surveyQueryDto.getSurveyDetails().stream().map(SurveyDetailQueryDto::getId).toList()
         ).stream().map(e -> {
             if (e instanceof SubjectiveSurveyResult)
@@ -72,19 +74,17 @@ public class SurveyResultQueryService {
                 return new MultipleChoiceResultQueryDto(e.getSurveyDetail().getId(), ((MultipleChoiceSurveyResult) e).getOption().getId());
             throw new RuntimeException();
         }).collect(Collectors.groupingBy(SurveyResultQueryDto::getSurveyDetailId));
-        return mappedSurveyResultDtos;
     }
 
     private Map<Long, List<MultipleChoiceOptionQueryDto>> getOptionQueryDtosMappedByDetailId(SurveyQueryDto surveyQueryDto) {
-        Map<Long, List<MultipleChoiceOptionQueryDto>> mappedOptionQueryDtos =
-                optionQueryRepository.findBySurveyDetailIds(getMultipleChoiceIds(surveyQueryDto)).stream()
-                        .collect(Collectors.groupingBy(MultipleChoiceOptionQueryDto::getSurveyDetailId));
-        return mappedOptionQueryDtos;
+        return optionQueryRepository.findBySurveyDetailIds(getMultipleChoiceIds(surveyQueryDto)).stream()
+                .collect(Collectors.groupingBy(MultipleChoiceOptionQueryDto::getSurveyDetailId));
     }
 
     private static List<Long> getMultipleChoiceIds(SurveyQueryDto surveyQueryDto) {
-        List<Long> mappedMultipleChoiceIds = surveyQueryDto.getSurveyDetails().stream().filter(o -> o instanceof MultipleChoiceSurveyDetailQueryDto).map(o -> o.getId()).collect(Collectors.toList());
-        return mappedMultipleChoiceIds;
+        return surveyQueryDto.getSurveyDetails().stream()
+                .filter(o -> o instanceof MultipleChoiceSurveyDetailQueryDto)
+                .map(SurveyDetailQueryDto::getId).collect(Collectors.toList());
     }
 
     private void validateReqMemberEqToCreateMember(String token, Long surveyId) {

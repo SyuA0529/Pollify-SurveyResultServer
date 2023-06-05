@@ -30,8 +30,7 @@ public class SurveyResultController {
                                         @Validated @RequestBody JoinSurveyDto joinSurveyDto,
                                         BindingResult bindingResult) {
         if(bindingResult.hasFieldErrors()) throw new FieldBindException(bindingResult.getFieldErrors());
-        if(
-                joinSurveyDto.getSurveyResults().stream()
+        if(joinSurveyDto.getSurveyResults().stream()
                 .anyMatch(e -> (e.getSurveyDetailId() <= 0) ||
                         (e.getDetailType().equals(SurveyDetailType.SUBJECTIVE) && e.getContent().isEmpty() ||
                         (e.getDetailType().equals(SurveyDetailType.MULTIPLE_CHOICE) && e.getOptionId() <= 0))))

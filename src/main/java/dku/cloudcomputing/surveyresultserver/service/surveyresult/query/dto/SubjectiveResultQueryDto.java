@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class SubjectiveResultQueryDto extends SurveyResultQueryDto {
-    private String content;
+    private final String content;
 
     public SubjectiveResultQueryDto(Long surveyDetailId, String content) {
         super(surveyDetailId);

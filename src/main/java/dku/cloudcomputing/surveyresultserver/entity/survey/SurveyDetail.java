@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "surveyType")
+@DiscriminatorColumn(name = "survey_type")
 @NoArgsConstructor
 public abstract class SurveyDetail {
     @Id
@@ -25,7 +25,7 @@ public abstract class SurveyDetail {
     private Survey survey;
 
     @OneToMany(mappedBy = "surveyDetail")
-    private List<SurveyResult> surveyResults = new ArrayList<>();
+    private final List<SurveyResult> surveyResults = new ArrayList<>();
 
     public SurveyDetail(Long id, Survey survey, String question) {
         this.id = id;

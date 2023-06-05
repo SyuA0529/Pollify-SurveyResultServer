@@ -57,7 +57,7 @@ class SurveyResultQueryServiceTest {
     @DisplayName("설문 결과 조회")
     void querySurveyResult() {
         //given
-        Member savedMember = memberRepository.saveAndFlush(new Member(1L, "test@test", "test", "tset"));
+        Member savedMember = memberRepository.saveAndFlush(new Member(1L, "test@test", "test", "test"));
         when(jwtAuthenticator.getEmail("")).thenReturn("test@test");
 
         Survey savedSurvey = surveyRepository.saveAndFlush(new Survey(1L, savedMember, "test", LocalDate.now(), 30, true));

@@ -18,14 +18,14 @@ public class KafkaSurveyDetailDto {
     private Long id;
     private String question;
     private SurveyDetailType surveyDetailType;
-    private List<KafkaDetailOptionDto> options = new ArrayList<>();
+    private final List<KafkaDetailOptionDto> options = new ArrayList<>();
 
     public SurveyDetail convertToEntity(Survey survey) {
         if(surveyDetailType == SurveyDetailType.SUBJECTIVE)
             return new SubjectiveSurveyDetail(id, survey, question);
         else if(surveyDetailType == SurveyDetailType.MULTIPLE_CHOICE) {
             MultipleChoiceSurveyDetail multipleChoiceSurveyDetail = new MultipleChoiceSurveyDetail(id, survey, question);
-            options.stream().map(e -> e.convertToEntity(multipleChoiceSurveyDetail)).toList();
+            options.forEach(e -> e.convertToEntity(multipleChoiceSurveyDetail));
             return multipleChoiceSurveyDetail;
         }
         throw new CannotConvertToEntityException();

@@ -5,9 +5,9 @@ import dku.cloudcomputing.surveyresultserver.entity.survey.MultipleChoiceSurveyD
 import dku.cloudcomputing.surveyresultserver.entity.survey.SubjectiveSurveyDetail;
 import dku.cloudcomputing.surveyresultserver.entity.survey.SurveyDetail;
 import dku.cloudcomputing.surveyresultserver.entity.surveyresult.SurveyResult;
-import dku.cloudcomputing.surveyresultserver.exception.ClientOccurException;
 import dku.cloudcomputing.surveyresultserver.exception.dto.CannotConvertToEntityException;
-import dku.cloudcomputing.surveyresultserver.exception.dto.WrongMultipleChoiceIdException;
+import dku.cloudcomputing.surveyresultserver.exception.dto.WrongMultipleChoiceException;
+import dku.cloudcomputing.surveyresultserver.exception.dto.WrongSurveyDetailException;
 import dku.cloudcomputing.surveyresultserver.exception.survey.NoSuchSurveyException;
 import dku.cloudcomputing.surveyresultserver.repository.survey.MultipleChoiceOptionRepository;
 import dku.cloudcomputing.surveyresultserver.repository.survey.SurveyDetailRepository;
@@ -43,10 +43,10 @@ public class SurveyResultService {
         List<MultipleChoiceOption> options = optionRepository.findBySurveyDetailIds(surveyDetailIds);
         validateOptionIdsInDto(surveyResultDtos, options);
 
-        resultRepository.saveAll(convertDtoToSuveyResult(surveyResultDtos, surveyDetails, options));
+        resultRepository.saveAll(convertDtoToSurveyResult(surveyResultDtos, surveyDetails, options));
     }
 
-    private static List<SurveyResult> convertDtoToSuveyResult(List<CreateSurveyResultDto> surveyResultDtos, List<SurveyDetail> surveyDetails, List<MultipleChoiceOption> options) {
+    private static List<SurveyResult> convertDtoToSurveyResult(List<CreateSurveyResultDto> surveyResultDtos, List<SurveyDetail> surveyDetails, List<MultipleChoiceOption> options) {
         Map<Long, SurveyDetail> mappedSurveyDetails = mapSurveyDetailToId(surveyDetails);
         Map<Long, MultipleChoiceOption> mappedOptions = mapMultipleChoiceOptionToId(options);
         return surveyResultDtos.stream().map(e -> {
@@ -66,22 +66,24 @@ public class SurveyResultService {
                 .forEach(e -> {
                     List<Long> optionIds = mappedOptions.get(e.getSurveyDetailId()).stream()
                             .map(MultipleChoiceOption::getId).toList();
-                    if(!optionIds.contains(e.getOptionId())) throw new WrongMultipleChoiceIdException();
+                    if(!optionIds.contains(e.getOptionId())) throw new WrongMultipleChoiceException();
                 });
     }
 
     private static void validateSurveyDetailDto(List<CreateSurveyResultDto> surveyResultDtos, List<SurveyDetail> surveyDetails) {
+        if(surveyResultDtos.size() != surveyDetails.size()) throw new WrongSurveyDetailException();
+
         Map<Long, List<CreateSurveyResultDto>> mappedResultDto =
                 surveyResultDtos.stream().collect(Collectors.groupingBy(CreateSurveyResultDto::getSurveyDetailId));
 
         surveyDetails.forEach(e -> {
             List<CreateSurveyResultDto> resultDtos = mappedResultDto.get(e.getId());
-            if(resultDtos == null || resultDtos.size() != 1) throw new ClientOccurException();
+            if(resultDtos == null || resultDtos.size() != 1) throw new WrongSurveyDetailException();
 
             CreateSurveyResultDto resultDto = resultDtos.get(0);
             if(e instanceof SubjectiveSurveyDetail && !resultDto.getDetailType().equals(SurveyDetailType.SUBJECTIVE) ||
                     e instanceof MultipleChoiceSurveyDetail && !resultDto.getDetailType().equals(SurveyDetailType.MULTIPLE_CHOICE))
-                throw new ClientOccurException();
+                throw new WrongSurveyDetailException();
         });
     }
 

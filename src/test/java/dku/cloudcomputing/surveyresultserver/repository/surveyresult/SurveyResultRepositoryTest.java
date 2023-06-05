@@ -73,11 +73,11 @@ class SurveyResultRepositoryTest {
         memberRepository.saveAndFlush(member);
         Survey survey = new Survey(1L, member, "test", LocalDate.now(), 30, true);
         surveyRepository.saveAndFlush(survey);
-        SurveyDetail multipleChoiceSD = new MultipleChoiceSurveyDetail(1L, survey, "question");
+        MultipleChoiceSurveyDetail multipleChoiceSD = new MultipleChoiceSurveyDetail(1L, survey, "question");
         surveyDetailRepository.saveAndFlush(multipleChoiceSD);
 
         List<MultipleChoiceOption> multipleChoiceOptions =
-                ((MultipleChoiceSurveyDetail) multipleChoiceSD).getMultipleChoiceOptions();
+                multipleChoiceSD.getMultipleChoiceOptions();
         for (int i = 0; i < 5; i++)
             multipleChoiceOptions.add(new MultipleChoiceOption((long) (i + 1), multipleChoiceSD, "option" + i));
         multipleChoiceOptionRepository.saveAllAndFlush(multipleChoiceOptions);

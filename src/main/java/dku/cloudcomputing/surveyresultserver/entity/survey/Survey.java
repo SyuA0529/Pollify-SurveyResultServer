@@ -31,7 +31,7 @@ public class Survey {
     private boolean visibility;
 
     @OneToMany(mappedBy = "survey")
-    private List<SurveyDetail> surveyDetails = new ArrayList<>();
+    private final List<SurveyDetail> surveyDetails = new ArrayList<>();
 
     public Survey(Long id, Member member, String name, LocalDate startDate, int duration, boolean visibility) {
         this.id = id;

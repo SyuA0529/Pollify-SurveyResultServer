@@ -21,7 +21,7 @@ public class Member {
     private String nickname;
 
     @OneToMany(mappedBy = "member")
-    private List<Survey> surveys = new ArrayList<>();
+    private final List<Survey> surveys = new ArrayList<>();
 
     public Member(Long id, String email, String password, String nickname) {
         this.id = id;

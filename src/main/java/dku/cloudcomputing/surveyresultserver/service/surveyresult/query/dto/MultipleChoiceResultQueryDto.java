@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class MultipleChoiceResultQueryDto extends SurveyResultQueryDto {
-    private Long selectOptionId;
+    private final Long selectOptionId;
 
     public MultipleChoiceResultQueryDto(Long surveyDetailId, Long selectOptionId) {
         super(surveyDetailId);

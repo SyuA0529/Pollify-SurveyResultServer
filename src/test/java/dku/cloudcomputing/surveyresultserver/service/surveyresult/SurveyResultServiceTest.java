@@ -46,7 +46,7 @@ class SurveyResultServiceTest {
     @Test
     @DisplayName("설문 결과 저장 테스트")
     void saveSurveyResult() {
-        Member savedMember = memberRepository.save(new Member(1L, "test@test", "test", "tset"));
+        Member savedMember = memberRepository.save(new Member(1L, "test@test", "test", "test"));
         Survey savedSurvey = surveyRepository.save(new Survey(1L, savedMember, "test", LocalDate.now(), 30, true));
         SubjectiveSurveyDetail savedSubjectiveDetail = detailRepository.save(new SubjectiveSurveyDetail(1L, savedSurvey, "test"));
         MultipleChoiceSurveyDetail savedMultipleChoiceDetail = detailRepository.save(new MultipleChoiceSurveyDetail(2L, savedSurvey, "test"));
@@ -76,7 +76,7 @@ class SurveyResultServiceTest {
     @Test
     @DisplayName("설문에 포함되지 않는 설문 세부 항목 포함시 저장 실패")
     void saveSurveyResultFailWhenSurveyDetailNotInSurvey() {
-        Member savedMember = memberRepository.save(new Member(1L, "test@test", "test", "tset"));
+        Member savedMember = memberRepository.save(new Member(1L, "test@test", "test", "test"));
         Survey savedSurvey = surveyRepository.save(new Survey(1L, savedMember, "test", LocalDate.now(), 30, true));
         Survey savedSurvey2 = surveyRepository.save(new Survey(2L, savedMember, "test", LocalDate.now(), 30, true));
 
@@ -99,7 +99,7 @@ class SurveyResultServiceTest {
     @Test
     @DisplayName("설문에 포함되지 않는 객관식(옵션) 항목 포함시 저장 실패")
     void saveSurveyResultFailWhenOptionNotInSurvey() {
-        Member savedMember = memberRepository.save(new Member(1L, "test@test", "test", "tset"));
+        Member savedMember = memberRepository.save(new Member(1L, "test@test", "test", "test"));
         Survey savedSurvey1 = surveyRepository.save(new Survey(1L, savedMember, "test", LocalDate.now(), 30, true));
         Survey savedSurvey2 = surveyRepository.save(new Survey(2L, savedMember, "test", LocalDate.now(), 30, true));
 
@@ -123,7 +123,7 @@ class SurveyResultServiceTest {
     @Test
     @DisplayName("다른 세부항목의 옵션 선택시 저장 실패")
     void saveSurveyResultFailWhenOptionWrongMatchDetail() {
-        Member savedMember = memberRepository.save(new Member(1L, "test@test", "test", "tset"));
+        Member savedMember = memberRepository.save(new Member(1L, "test@test", "test", "test"));
         Survey savedSurvey1 = surveyRepository.save(new Survey(1L, savedMember, "test", LocalDate.now(), 30, true));
 
         MultipleChoiceSurveyDetail savedMultipleChoiceDetail1 = detailRepository.save(new MultipleChoiceSurveyDetail(1L, savedSurvey1, "test"));

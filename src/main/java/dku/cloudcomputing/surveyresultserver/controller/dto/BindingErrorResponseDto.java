@@ -7,8 +7,8 @@ import java.util.List;
 
 @Getter
 public class BindingErrorResponseDto {
-    private String status;
-    private List<FieldBindingErrorDto> errors = new ArrayList<>();
+    private final String status;
+    private final List<FieldBindingErrorDto> errors = new ArrayList<>();
 
     public BindingErrorResponseDto(String status) {
         this.status = status;

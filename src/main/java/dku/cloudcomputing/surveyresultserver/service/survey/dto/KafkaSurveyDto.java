@@ -2,7 +2,6 @@ package dku.cloudcomputing.surveyresultserver.service.survey.dto;
 
 import dku.cloudcomputing.surveyresultserver.entity.member.Member;
 import dku.cloudcomputing.surveyresultserver.entity.survey.Survey;
-import dku.cloudcomputing.surveyresultserver.entity.survey.SurveyDetail;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,11 +18,11 @@ public class KafkaSurveyDto {
     private LocalDate startDate;
     private int duration;
     private boolean visibility;
-    private List<KafkaSurveyDetailDto> surveyDetails = new ArrayList<>();
+    private final List<KafkaSurveyDetailDto> surveyDetails = new ArrayList<>();
 
     public Survey convertToSurveyEntity(Member member) {
         Survey survey = new Survey(id, member, name, startDate, duration, visibility);
-        surveyDetails.stream().map(e -> e.convertToEntity(survey)).toList();
+        surveyDetails.forEach(e -> e.convertToEntity(survey));
         return survey;
     }
 }

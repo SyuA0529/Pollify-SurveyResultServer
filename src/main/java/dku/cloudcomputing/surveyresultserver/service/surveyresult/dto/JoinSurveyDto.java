@@ -9,5 +9,5 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class JoinSurveyDto {
-    private List<CreateSurveyResultDto> surveyResults = new ArrayList<>();
+    private final List<CreateSurveyResultDto> surveyResults = new ArrayList<>();
 }

@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public class MultipleChoiceOptionQueryDto {
     @JsonIgnore
-    private Long surveyDetailId;
-    private Long optionId;
-    private String option;
+    private final Long surveyDetailId;
+    private final Long optionId;
+    private final String option;
 
     public MultipleChoiceOptionQueryDto(Long surveyDetailId, Long optionId, String option) {
         this.surveyDetailId = surveyDetailId;

@@ -2,11 +2,11 @@ package dku.cloudcomputing.surveyresultserver.exception.dto;
 
 import dku.cloudcomputing.surveyresultserver.exception.ClientOccurException;
 
-public class WrongSurveyDetailIdException extends ClientOccurException {
-    public WrongSurveyDetailIdException() {
+public class WrongMultipleChoiceException extends ClientOccurException {
+    public WrongMultipleChoiceException() {
     }
 
-    public WrongSurveyDetailIdException(String message) {
+    public WrongMultipleChoiceException(String message) {
         super(message);
     }
 }

@@ -1,6 +1,5 @@
 package dku.cloudcomputing.surveyresultserver.entity.survey;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -16,7 +15,7 @@ import java.util.List;
 @Getter
 public class MultipleChoiceSurveyDetail extends SurveyDetail{
     @OneToMany(mappedBy = "surveyDetail")
-    private List<MultipleChoiceOption> multipleChoiceOptions = new ArrayList<>();
+    private final List<MultipleChoiceOption> multipleChoiceOptions = new ArrayList<>();
 
     public MultipleChoiceSurveyDetail(Long id, Survey survey, String question) {
         super(id, survey, question);

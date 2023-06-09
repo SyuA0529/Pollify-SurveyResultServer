@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: surveyresultserver-service
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: surveyresultserver
+  type: ClusterIP
